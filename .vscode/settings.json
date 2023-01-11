@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    ".sequelizerc": "javascript",
+    ".stylelintrc": "json",
+    ".prettierrc": "json",
+    "*.tsx": "typescriptreact",
+    ".env.*": "dotenv",
+    "stdlib.h": "c",
+    "random": "c",
+    "stdio.h": "c",
+    "sstream": "c"
+  }
+}
