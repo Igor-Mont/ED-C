@@ -16,7 +16,7 @@ int main() {
     peoples_in += peopes_entered - peopes_left;
 
     if(peoples_in > maximum_capacity) {
-      printf("S");
+      printf("S"); 
       return 0;
     }
   }

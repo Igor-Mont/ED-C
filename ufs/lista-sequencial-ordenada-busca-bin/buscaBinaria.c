@@ -2,6 +2,9 @@
 #include <stdbool.h>
 #include <time.h>
 
+// pesquisar sobre a busca interpolada
+// fazer a inserção na ordem na posição, o prof ja fez na ordem
+
 bool buscaBinaria(int l[20], int size, int num) {
   int begin = 0;
   int end = size - 1;

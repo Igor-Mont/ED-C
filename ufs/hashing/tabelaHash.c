@@ -2,6 +2,7 @@
 #include <string.h>
 
 // 2 * 15 (qtd. elementos) = primo mais proximo da soma
+// usar lista para guardar colisões  
 
 #define TAM 31
 
