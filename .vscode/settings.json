@@ -8,6 +8,7 @@
     "stdlib.h": "c",
     "random": "c",
     "stdio.h": "c",
-    "sstream": "c"
+    "sstream": "c",
+    "stdbool.h": "c"
   }
 }
