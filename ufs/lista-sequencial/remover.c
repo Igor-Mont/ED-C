@@ -176,10 +176,16 @@ void destruir(LISTA *l)
 // Pre-condicao: 0 <= pos < tamanho
 bool removerDaPos(int pos, LISTA *l)
 {
-  if(pos >= l->tamanho) return false;
+	if(pos >= l->tamanho) return false;
   if(pos == -1) return false;
 
   for(int i = pos; i < l->tamanho; i++) {
+		// 1 2 3 4 5
+		// remover o 3...
+		// 1 2 4 4 5
+		// 1 2 4 5
+
+		(*l).itens[i] = l->itens[i];
     l->itens[i] = l->itens[i+1];
   }
 

@@ -150,16 +150,22 @@ void inverter(LISTA *l) {
 	LISTA aux;
 	inicializar(&aux);
 
-	int length = tamanho(*l);
+	int tam = tamanho(*l);
 	int j = 0;
 
-	for(int i = length - 1; i >= 0; i--) {
-		aux.itens[j++] = l->itens[i];
+	for(int i = tam - 1; i >= 0; i--) {
+		// i = 10 j = 0
+		// i = 9 j = 1
+		// i = 8 j = 2
+		// i = 7 j = 3
+		// ...
+		// i = 0 j = 10
+		aux.itens[j] = l->itens[i];
+		aux.tamanho++;
+		j++;
 	}
 
-	for(int i = 0; i < length; i++) {
-		l->itens[i] = aux.itens[i];
-	}
+	*l = aux;
 }
 
 int main(){

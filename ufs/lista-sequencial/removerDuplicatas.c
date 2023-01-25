@@ -195,7 +195,6 @@ void lerItens(LISTA *l)
  */
 int removerDuplicados(LISTA *l)
 {
-  int duplicados = 0;
   LISTA aux;
   inicializar(&aux);
 
@@ -204,11 +203,12 @@ int removerDuplicados(LISTA *l)
     if(!obter(l->itens[i].chave, &item, aux)) {
       aux.itens[aux.tamanho++] = l->itens[i];
     }
-    duplicados++;
   }
+  int duplicados = l->tamanho - aux.tamanho;
+
   *l = aux;
   
-  return duplicados - aux.tamanho;
+  return duplicados;
 }
 
 

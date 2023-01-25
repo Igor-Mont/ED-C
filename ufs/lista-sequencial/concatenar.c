@@ -219,14 +219,12 @@ void lerItens(LISTA *l)
 // }
 bool concatenar(LISTA *l1, LISTA *l2)
 {
-
   int tamanhoFinal = l1->tamanho + l2->tamanho;
-  bool excedeu = tamanhoFinal > 50;
+  bool excedeu = tamanhoFinal > MAX;
   if (excedeu) return false;
 
   int i = l1->tamanho;
   l1->tamanho = tamanhoFinal;
-
 
   int j = 0;
   for(i; i < tamanhoFinal; i++) {
