@@ -78,6 +78,12 @@ bool inserir(ITEM item, LISTA *l){
     return true;
 }
 
+    // if(NOatual->item.chave == item.chave) return false;
+    // if(NOatual->item.chave < item.chave) {
+    //   NOanteiror = NOatual;
+    //   NOatual = NOatual->prox;
+    // }
+
 
 /*
   Objetivo: Remove o item cuja chave coincide com o parametro chave
