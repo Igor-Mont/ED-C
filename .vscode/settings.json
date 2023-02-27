@@ -9,6 +9,8 @@
     "random": "c",
     "stdio.h": "c",
     "sstream": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "array": "c",
+    "string": "c"
   }
 }
