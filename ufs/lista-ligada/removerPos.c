@@ -128,7 +128,7 @@ bool removerDaPos(int posRemocao, LISTA *l)
         return true;
     }
 
-    if(aux->prox == NULL) return false;
+    if(aux->prox == NULL) return false; //tamanho = 1
 
     for(int i = 0; i < posRemocao - 1; i++)
         aux = aux->prox;

@@ -154,12 +154,6 @@ void inverter(LISTA *l) {
 	int j = 0;
 
 	for(int i = tam - 1; i >= 0; i--) {
-		// i = 10 j = 0
-		// i = 9 j = 1
-		// i = 8 j = 2
-		// i = 7 j = 3
-		// ...
-		// i = 0 j = 10
 		aux.itens[j] = l->itens[i];
 		aux.tamanho++;
 		j++;

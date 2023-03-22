@@ -117,7 +117,7 @@ bool inserirNaPos(ITEM item, int posInsercao, LISTA *l)
 
   NO * NOnovo = criarNo(item, NULL);
 
-  if(!posInsercao) {
+  if(!posInsercao) { // == 0
     NOnovo->prox = l->cabeca;
     l->cabeca = NOnovo;
     return true;
