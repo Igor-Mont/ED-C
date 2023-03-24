@@ -154,20 +154,19 @@ void inverter(LISTA *l)
 {
   if(l->cabeca == NULL || l->tamanho <= 1) return;
 
-  NO * NOAtual = l->cabeca; // Deixei começando na cabeça.
-  NO * NOAnterior = NULL; // Iniciei como NULL.
+  NO * NOAtual = l->cabeca;
+  NO * NOAnterior = NULL; 
 
-  NO * NOProximo = NULL; // Adicionei essa variável.
+  NO * NOProximo = NULL;
 
-  while(NOAtual != NULL) { // Confundi na hora da escrita, aqui é NOAtual mesmo.
-    // Adicionei as devidas atribuições com a variável.
+  while(NOAtual != NULL) {
     NOProximo = NOAtual->prox;
     NOAtual->prox = NOAnterior;
     NOAnterior = NOAtual;
     NOAtual = NOProximo;
   }
 
-  l->cabeca = NOAnterior; //  Confundi na hora da escrita, aqui é NOAnterior mesmo.
+  l->cabeca = NOAnterior;
 }
 
 //////////////////////////////////////////////////////////////
