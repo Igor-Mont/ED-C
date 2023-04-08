@@ -292,46 +292,40 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
 
 void remover(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    No *successor = no;
-    No *children;
-    enum COR successor_orignal_cor = successor->cor;
-    /* caso um dos lados estiver NULL entao basta transplantar o lado
-    não nulo para o nó que deseja remover
-     */
+    No *sucessor = no;
+    No *filho;
+    enum COR cor_original_sucessor = sucessor->cor;
+    /* Caso alguma subárvore seja nula, basta transplatar o lado não nulo
+       para o nó que deseja remover. */
     if (no->esq == arv->NIL) {
-        children = no->dir;
+        filho = no->dir;
         transplantarSubArvore(arv, no, no->dir);
     }
     else if (no->dir == arv->NIL) {
-        children = no->esq;
+        filho = no->esq;
         transplantarSubArvore(arv, no, no->esq);
     }
-    /* caso nenhum os 2 lados tenham filhos */
+    /* Caso o nó tenha filhos em ambos os lados. */
     else {
-        successor = obterSucessor(arv, no->dir);
-        children = successor->dir;
-        successor_orignal_cor = successor->cor; /* preciso guardar a cor para colocar no no que vai ser removido */
-        /* caso o sucessor seja filho imediato de no 
-        eu tenho que ter certeza que ele esta apontando
-        para no pois se children for nulo entao teremos 
-        problemas na hora de balancear
-         */
-        if (successor->pai == no) {
-            children->pai = successor;
-        }
+        sucessor = obterSucessor(arv, no->dir);
+        filho = sucessor->dir;
+        cor_original_sucessor = sucessor->cor; // Guardar a cor para saber se precisa do balanceamento.
+        // Caso o sucessor seja filho imediato, garantimos que o filho dele está apontando para o sucessor. 
+        if (sucessor->pai == no)
+            filho->pai = sucessor;
         else {
-            transplantarSubArvore(arv, successor, successor->dir);
-            successor->dir = no->dir;
-            successor->dir->pai = successor;
+            transplantarSubArvore(arv, sucessor, sucessor->dir);
+            sucessor->dir = no->dir;
+            sucessor->dir->pai = sucessor;
         }
-        transplantarSubArvore(arv, no, successor);
-        successor->esq = no->esq;
-        successor->esq->pai = successor;
-        successor->cor = no->cor;
+        transplantarSubArvore(arv, no, sucessor);
+        sucessor->esq = no->esq;
+        sucessor->esq->pai = sucessor;
+        sucessor->cor = no->cor;
     }
-    /* se o no sucessor  */
-    if (successor_orignal_cor == Preto)
-        balancearRemocao(arv, children);
+    // Se o sucessor for preto, balanceamos.
+    if (cor_original_sucessor == Preto)
+        balancearRemocao(arv, filho);
 }
 
 void inorder(ARVORE_RUBRO_NEGRA *arv, No *no)
