@@ -103,7 +103,7 @@ void rotacaoDireita(ARVORE_RUBRO_NEGRA *arv, No *no)
         no->pai->dir = esq;
     else // Nó é filho esquerdo.
         no->pai->esq = esq;
-        
+
     esq->dir = no;
     no->pai = esq;
 }
@@ -111,54 +111,52 @@ void rotacaoDireita(ARVORE_RUBRO_NEGRA *arv, No *no)
 void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
     while (no->pai->cor == Vermelho) {   
         No * pai = no->pai;
-        No * grandpai = no->pai->pai;
-        //  pai            .esq
-        if (pai == grandpai->esq) // o nó pai é filho esquerdo de um avó
+        No * avo = no->pai->pai;
+        if (pai == avo->esq) // Nó pai é filho esquerdo do avô.
         {
-
-            No *uncle = grandpai->dir; // tio de no
-            //tio vermelho
-            if (uncle->cor == Vermelho)
-            { // caso 1
+            No *tio = avo->dir;
+            if (tio->cor == Vermelho) // (Caso 1) Tio também é vermelho.
+            {
                 pai->cor = Preto;
-                uncle->cor = Preto;
-                grandpai->cor = Vermelho;
-                no = grandpai;
-                //proxima iteração...
+                tio->cor = Preto;
+                avo->cor = Vermelho;
+                no = avo;
             }
-            else { //tio preto
-                // case2
-                if (no == pai->dir) { 
-                    no = no->pai; // marked no.pai as new no
+            else { // (Caso 2) Tio é preto.
+                if (no == pai->dir) // (Rotação dupla) Nó é filho direito do pai.
+                { 
+                    no = pai;
                     rotacaoEsquerda(arv, no);
                 }
-                // case3
-                no->pai->cor = Preto;       
-                no->pai->pai->cor = Vermelho;
-                rotacaoDireita(arv, no->pai->pai);
+                pai = no->pai;
+                // (Rotação Simples) Nó é filho esquerdo do pai.
+                pai->cor = Preto;       
+                avo->cor = Vermelho;
+                rotacaoDireita(arv, avo);
             }
         }
-        else
-        {                                           // no.pai is the dir child
-            No *uncle = no->pai->pai->esq; // uncle of no
-
-            if (uncle->cor == Vermelho)
+        else // Nó pai é filho direito do avô.
+        {
+            No *tio = avo->esq;
+            if (tio->cor == Vermelho) // (Caso 1) Tio também é vermelho.
             {
-                no->pai->cor = Preto;
-                uncle->cor = Preto;
-                no->pai->pai->cor = Vermelho;
-                no = no->pai->pai;
+                pai->cor = Preto;
+                tio->cor = Preto;
+                avo->cor = Vermelho;
+                no = avo;
             }
-            else
+            else // (Caso 2) Tio é preto.
             {
-                if (no == no->pai->esq)
-                {
-                    no = no->pai; // marked no.pai as new no
+                if (no == pai->esq) // (Rotação dupla) Nó é filho esquerdo do pai.
+                {   
+                    no = pai; // marked no.pai as new no
                     rotacaoDireita(arv, no);
                 }
-                no->pai->cor = Preto;       // made pai black
-                no->pai->pai->cor = Vermelho; // made pai red
-                rotacaoEsquerda(arv, no->pai->pai);
+                pai = no->pai;
+                // (Rotação Simples) Nó é filho direito do pai.
+                pai->cor = Preto;
+                avo->cor = Vermelho;
+                rotacaoEsquerda(arv, avo);
             }
         }
     }
