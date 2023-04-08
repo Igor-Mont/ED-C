@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 enum COR
 {
@@ -68,6 +69,10 @@ No* buscaARB(ARVORE_RUBRO_NEGRA* arv, int valor) {
     }
 }
 
+bool ehFilhoEsquerdo(No *no) {
+    return no == no->pai->esq;
+}
+
 void rotacaoEsquerda(ARVORE_RUBRO_NEGRA *arv, No *no)
 {   
     No *dir = no->dir;
@@ -79,7 +84,7 @@ void rotacaoEsquerda(ARVORE_RUBRO_NEGRA *arv, No *no)
 
     if (no->pai == arv->NIL) // Nó é raiz.
         arv->raiz = dir;
-    else if (no == no->pai->esq) // Nó é filho esquerdo.
+    else if (ehFilhoEsquerdo(no)) // Nó é filho esquerdo.
         no->pai->esq = dir;
     else // Nó é filho direito.
         no->pai->dir = dir;
@@ -112,7 +117,7 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
     while (no->pai->cor == Vermelho) {   
         No * pai = no->pai;
         No * avo = no->pai->pai;
-        if (pai == avo->esq) // Nó pai é filho esquerdo do avô.
+        if (ehFilhoEsquerdo(pai)) // Nó pai é filho esquerdo do avô.
         {
             No *tio = avo->dir;
             if (tio->cor == Vermelho) // (Caso 1) Tio também é vermelho.
@@ -123,7 +128,7 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
                 no = avo;
             }
             else { // (Caso 2) Tio é preto.
-                if (no == pai->dir) // (Rotação dupla) Nó é filho direito do pai.
+                if (!ehFilhoEsquerdo(no)) // (Rotação dupla) Nó é filho direito do pai.
                 { 
                     no = pai;
                     rotacaoEsquerda(arv, no);
@@ -147,7 +152,7 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
             }
             else // (Caso 2) Tio é preto.
             {
-                if (no == pai->esq) // (Rotação dupla) Nó é filho esquerdo do pai.
+                if (ehFilhoEsquerdo(no)) // (Rotação dupla) Nó é filho esquerdo do pai.
                 {   
                     no = pai; // marked no.pai as new no
                     rotacaoDireita(arv, no);
@@ -197,7 +202,7 @@ void transplantarSubArvore(ARVORE_RUBRO_NEGRA *arv, No *no, No *filho)
 {
     if (no->pai == arv->NIL) // Se o pai do nó for nulo.
         arv->raiz = filho;
-    else if (no == no->pai->esq)
+    else if (ehFilhoEsquerdo(no))
         no->pai->esq = filho;
     else
         no->pai->dir = filho;
@@ -211,11 +216,15 @@ No *obterSucessor(ARVORE_RUBRO_NEGRA *arv, No *no)
     return no;
 }
 
+bool filhosPretos(No *no) {
+    return no->esq->cor == Preto && no->dir->cor == Preto;
+}
+
 void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
     while (no != arv->raiz && no->cor == Preto) // Nó diferente da raiz e nó é preto.
     { 
-        if (no == no->pai->esq) // Nó é filho esquerdo do pai.
+        if (ehFilhoEsquerdo(no)) // Nó é filho esquerdo do pai.
         {
             No *irmao = no->pai->dir;
             if (irmao->cor == Vermelho) // (Caso 1) Irmão é vermelho
@@ -228,13 +237,13 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
                 irmao = no->pai->dir; // Atualiza o irmão.
             }
             // (Caso 2) O irmão e seus filhos são pretos.
-            if (irmao->esq->cor == Preto && irmao->dir->cor == Preto)
+            if (filhosPretos(irmao))
             {
                 irmao->cor = Vermelho; // Irmão fica vermelho.
                 no = no->pai; // Atualiza o nó.
             }
-            else
-            {   // (Caso 3) Filho esquerdo é vermelho e direito é preto.
+            else // (Caso 3) Filho esquerdo é vermelho e direito é preto.
+            { 
                 if (irmao->dir->cor == Preto)
                 {
                     irmao->esq->cor = Preto; // Filho esquerdo do irmão fica preto.
@@ -265,13 +274,13 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
                 irmao = no->pai->esq; // Atualiza o irmão.
             }
             // (Caso 2) O irmão e seus filhos são pretos.
-            if (irmao->dir->cor == Preto && irmao->esq->cor == Preto)
+            if (filhosPretos(irmao))
             {
                 irmao->cor = Vermelho; // Irmão fica vermelho.
                 no = no->pai; // Atualiza o nó.
             }
-            else
-            {   // (Caso 3) Filho esquerdo é vermelho e direito é preto.
+            else // (Caso 3) Filho esquerdo é vermelho e direito é preto.
+            {   
                 if (irmao->esq->cor == Preto)
                 {
                     irmao->dir->cor = Preto; // / Filho direito do irmão fica preto.
@@ -337,7 +346,9 @@ void inorder(ARVORE_RUBRO_NEGRA *arv, No *no)
     if (no != arv->NIL)
     {
         inorder(arv, no->esq);
-        printf("%d\n", no->valor);
+        printf(arv->raiz == no ? "Raiz: " : "");
+        printf("%d ", no->valor);
+        printf(no->cor == Vermelho ? "Vermelho\n" : "Preto\n");
         inorder(arv, no->dir);
     }
 }
@@ -347,13 +358,13 @@ int main()
     ARVORE_RUBRO_NEGRA *t = criaARB();
 
     No *a, *b, *c, *d, *e, *f, *g, *h, *i, *j, *k, *l, *m;
-    a = criarNoARB(10);
-    b = criarNoARB(20);
+    a = criarNoARB(10);  
+    b = criarNoARB(20); 
     c = criarNoARB(30);
     d = criarNoARB(100);
     e = criarNoARB(90);
     f = criarNoARB(40);
-    g = criarNoARB(50);
+    g = criarNoARB(50); 
     h = criarNoARB(60);
     i = criarNoARB(70);
     j = criarNoARB(80);
