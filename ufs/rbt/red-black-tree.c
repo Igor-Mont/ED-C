@@ -174,7 +174,7 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
     arv->raiz->cor = Preto;
 }
 
-void insercao(ARVORE_RUBRO_NEGRA *arv, No *newNode) 
+void inserir(ARVORE_RUBRO_NEGRA *arv, No *newNode) 
 {
     No *paiOfNewNode = arv->NIL;
     No *current = arv->raiz;
@@ -223,7 +223,7 @@ No *obterSucessor(ARVORE_RUBRO_NEGRA *arv, No *no)
     return no;
 }
 
-void rb_delete_fixup(ARVORE_RUBRO_NEGRA *arv, No *no)
+void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
     while (no != arv->raiz && no->cor == Preto)
     { /* se o no é filho esquerdo do pai */
@@ -302,7 +302,7 @@ void rb_delete_fixup(ARVORE_RUBRO_NEGRA *arv, No *no)
     no->cor = Preto;
 }
 
-void rb_delete(ARVORE_RUBRO_NEGRA *arv, No *no)
+void remover(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
     No *successor = no;
     No *children;
@@ -343,16 +343,16 @@ void rb_delete(ARVORE_RUBRO_NEGRA *arv, No *no)
     }
     /* se o no sucessor  */
     if (successor_orignal_cor == Preto)
-        rb_delete_fixup(arv, children);
+        balancearRemocao(arv, children);
 }
 
-void inorder(ARVORE_RUBRO_NEGRA *t, No *n)
+void inorder(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    if (n != t->NIL)
+    if (no != arv->NIL)
     {
-        inorder(t, n->esq);
-        printf("%d\n", n->valor);
-        inorder(t, n->dir);
+        inorder(arv, no->esq);
+        printf("%d\n", no->valor);
+        inorder(arv, no->dir);
     }
 }
 
@@ -375,24 +375,24 @@ int main()
     l = criarNoARB(110);
     m = criarNoARB(120);
 
-    insercao(t, a);
-    insercao(t, b);
-    insercao(t, c);
-    insercao(t, d);
-    insercao(t, e);
-    insercao(t, f);
-    insercao(t, g);
-    insercao(t, h);
-    insercao(t, i);
-    insercao(t, j);
-    insercao(t, k);
-    insercao(t, l);
-    insercao(t, m);
+    inserir(t, a);
+    inserir(t, b);
+    inserir(t, c);
+    inserir(t, d);
+    inserir(t, e);
+    inserir(t, f);
+    inserir(t, g);
+    inserir(t, h);
+    inserir(t, i);
+    inserir(t, j);
+    inserir(t, k);
+    inserir(t, l);
+    inserir(t, m);
 
-    rb_delete(t, a);
-    rb_delete(t, m);
-    rb_delete(t, g);
-    rb_delete(t, b);
+    remover(t, a);
+    remover(t, m);
+    remover(t, g);
+    remover(t, b);
 
     inorder(t, t->raiz);
 
