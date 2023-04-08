@@ -37,22 +37,22 @@ No *criarNoARB(int valor)
 ARVORE_RUBRO_NEGRA *criaARB()
 {
     ARVORE_RUBRO_NEGRA *t = malloc(sizeof(ARVORE_RUBRO_NEGRA));
-    No *nil_node = malloc(sizeof(No));
-    nil_node->esq = NULL;
-    nil_node->dir = NULL;
-    nil_node->pai = NULL;
-    nil_node->cor = Preto;
-    nil_node->valor = 0;
-    t->NIL = nil_node;
+    No *nil_no = malloc(sizeof(No));
+    nil_no->esq = NULL;
+    nil_no->dir = NULL;
+    nil_no->pai = NULL;
+    nil_no->cor = Preto;
+    nil_no->valor = 0;
+    t->NIL = nil_no;
     t->raiz = t->NIL;
 
     return t;
 }
 
-No* buscaARB(ARVORE_RUBRO_NEGRA* arv, int value) {
+No* buscaARB(ARVORE_RUBRO_NEGRA* arv, int valor) {
     // Percorre a árvore a partir da raiz.
-    while (arv->raiz != arv->NIL && arv->raiz->valor != value) {
-        if (value < arv->raiz->valor)
+    while (arv->raiz != arv->NIL && arv->raiz->valor != valor) {
+        if (valor < arv->raiz->valor)
             arv->raiz = arv->raiz->esq;
         else
             arv->raiz = arv->raiz->dir;
@@ -68,106 +68,106 @@ No* buscaARB(ARVORE_RUBRO_NEGRA* arv, int value) {
     }
 }
 
-void rotacaoEsquerda(ARVORE_RUBRO_NEGRA *arv,No *node)
+void rotacaoEsquerda(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    No *dir = node->dir;
-    node->dir = dir->esq;
+    No *dir = no->dir;
+    no->dir = dir->esq;
     if (dir->esq != arv->NIL) {
-        dir->esq->pai = node;
+        dir->esq->pai = no;
     }
-    dir->pai = node->pai;
-    if (node->pai == arv->NIL)
-    { // node is raiz
+    dir->pai = no->pai;
+    if (no->pai == arv->NIL)
+    { // no is raiz
         arv->raiz = dir;
     }
-    else if (node == node->pai->esq)
-    { // node is esq child
-        node->pai->esq = dir;
+    else if (no == no->pai->esq)
+    { // no is esq child
+        no->pai->esq = dir;
     }
     else
-    { // node is dir child
-        node->pai->dir = dir;
+    { // no is dir child
+        no->pai->dir = dir;
     }
-    dir->esq = node;
-    node->pai = dir;
+    dir->esq = no;
+    no->pai = dir;
 }
 
-void rotacaoDireita(ARVORE_RUBRO_NEGRA *arv, No *node)
+void rotacaoDireita(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    No *esq = node->esq;
-    node->esq = esq->dir;
+    No *esq = no->esq;
+    no->esq = esq->dir;
     if (esq->dir != arv->NIL)
     {
-        esq->dir->pai = node;
+        esq->dir->pai = no;
     }
-    esq->pai = node->pai;
-    if (node->pai == arv->NIL)
-    { // node is raiz
+    esq->pai = no->pai;
+    if (no->pai == arv->NIL)
+    { // no is raiz
         arv->raiz = esq;
     }
-    else if (node == node->pai->dir)
-    { // node is esq child
-        node->pai->dir = esq;
+    else if (no == no->pai->dir)
+    { // no is esq child
+        no->pai->dir = esq;
     }
     else
-    { // node is dir child
-        node->pai->esq = esq;
+    { // no is dir child
+        no->pai->esq = esq;
     }
-    esq->dir = node;
-    node->pai = esq;
+    esq->dir = no;
+    no->pai = esq;
 }
 
-void insertion_fixup(ARVORE_RUBRO_NEGRA *arv, No *node) {
-    while (node->pai->cor == Vermelho) {   
-        No * pai = node->pai;
-        No * grandpai = node->pai->pai;
+void insertion_fixup(ARVORE_RUBRO_NEGRA *arv, No *no) {
+    while (no->pai->cor == Vermelho) {   
+        No * pai = no->pai;
+        No * grandpai = no->pai->pai;
         //  pai            .esq
         if (pai == grandpai->esq) // o nó pai é filho esquerdo de um avó
         {
 
-            No *uncle = grandpai->dir; // tio de node
+            No *uncle = grandpai->dir; // tio de no
             //tio vermelho
             if (uncle->cor == Vermelho)
             { // caso 1
                 pai->cor = Preto;
                 uncle->cor = Preto;
                 grandpai->cor = Vermelho;
-                node = grandpai;
+                no = grandpai;
                 //proxima iteração...
             }
             else { //tio preto
                 // case2
-                if (node == pai->dir) { 
-                    node = node->pai; // marked node.pai as new node
-                    rotacaoEsquerda(arv, node);
+                if (no == pai->dir) { 
+                    no = no->pai; // marked no.pai as new no
+                    rotacaoEsquerda(arv, no);
                 }
                 // case3
-                node->pai->cor = Preto;       
-                node->pai->pai->cor = Vermelho;
-                rotacaoDireita(arv, node->pai->pai);
+                no->pai->cor = Preto;       
+                no->pai->pai->cor = Vermelho;
+                rotacaoDireita(arv, no->pai->pai);
             }
         }
         else
-        {                                           // node.pai is the dir child
-            No *uncle = node->pai->pai->esq; // uncle of node
+        {                                           // no.pai is the dir child
+            No *uncle = no->pai->pai->esq; // uncle of no
 
             if (uncle->cor == Vermelho)
             {
-                node->pai->cor = Preto;
+                no->pai->cor = Preto;
                 uncle->cor = Preto;
-                node->pai->pai->cor = Vermelho;
-                node = node->pai->pai;
+                no->pai->pai->cor = Vermelho;
+                no = no->pai->pai;
             }
             else
             {
-                if (node == node->pai->esq)
+                if (no == no->pai->esq)
                 {
-                    node = node->pai; // marked node.pai as new node
-                    rotacaoDireita(arv, node);
+                    no = no->pai; // marked no.pai as new no
+                    rotacaoDireita(arv, no);
                 }
-                node->pai->cor = Preto;       // made pai black
-                node->pai->pai->cor = Vermelho; // made pai red
-                rotacaoEsquerda(arv, node->pai->pai);
+                no->pai->cor = Preto;       // made pai black
+                no->pai->pai->cor = Vermelho; // made pai red
+                rotacaoEsquerda(arv, no->pai->pai);
             }
         }
     }
@@ -205,31 +205,31 @@ void insert(ARVORE_RUBRO_NEGRA *arv, No *newNode)
     insertion_fixup(arv, newNode);
 }
 
-void rb_transplant(ARVORE_RUBRO_NEGRA *arv, No *node, No *children) 
+void rb_transplant(ARVORE_RUBRO_NEGRA *arv, No *no, No *children) 
 {
-    if (node->pai == arv->NIL)
+    if (no->pai == arv->NIL)
         arv->raiz = children;
-    else if (node == node->pai->esq)
-        node->pai->esq = children;
+    else if (no == no->pai->esq)
+        no->pai->esq = children;
     else
-        node->pai->dir = children;
-    children->pai = node->pai;
+        no->pai->dir = children;
+    children->pai = no->pai;
 }
 
-No *minimum(ARVORE_RUBRO_NEGRA *arv, No *node)
+No *minimum(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    while (node->esq != arv->NIL)
-        node = node->esq;
-    return node;
+    while (no->esq != arv->NIL)
+        no = no->esq;
+    return no;
 }
 
-void rb_delete_fixup(ARVORE_RUBRO_NEGRA *arv, No *node)
+void rb_delete_fixup(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    while (node != arv->raiz && node->cor == Preto)
+    while (no != arv->raiz && no->cor == Preto)
     { /* se o no é filho esquerdo do pai */
-        if (node == node->pai->esq)
+        if (no == no->pai->esq)
         {
-            No *sibling = node->pai->dir;
+            No *sibling = no->pai->dir;
             /* CASO 1; se o irmao for vermelho, recore o irmao e pai,
             para fazer a rotação
               */
@@ -237,16 +237,16 @@ void rb_delete_fixup(ARVORE_RUBRO_NEGRA *arv, No *node)
             {
                 //recorTorotacaoEsquerda()
                 sibling->cor = Preto;
-                node->pai->cor = Vermelho;
-                rotacaoEsquerda(arv, node->pai);
+                no->pai->cor = Vermelho;
+                rotacaoEsquerda(arv, no->pai);
                 //updateSibling()
-                sibling = node->pai->dir;
+                sibling = no->pai->dir;
             }
             /* CASO 2; irmao preto entao recore e passa para o pai */
             if (sibling->esq->cor == Preto && sibling->dir->cor == Preto)
             {
                 sibling->cor = Vermelho; //recor sibling
-                node = node->pai;
+                no = no->pai;
             }
             else
             {   /* CASO 3: filho esquedo vermelho e direito preto */
@@ -257,30 +257,30 @@ void rb_delete_fixup(ARVORE_RUBRO_NEGRA *arv, No *node)
                     sibling->esq->cor = Preto;
                     rotacaoDireita(arv, sibling);
                     //atualizando irmao
-                    sibling = node->pai->dir;
+                    sibling = no->pai->dir;
                 }
                 /* CASO 4: filho direito vermelho */
-                sibling->cor = node->pai->cor;
-                node->pai->cor = Preto;
+                sibling->cor = no->pai->cor;
+                no->pai->cor = Preto;
                 sibling->dir->cor = Preto;
-                rotacaoEsquerda(arv, node->pai);
-                node = arv->raiz;
+                rotacaoEsquerda(arv, no->pai);
+                no = arv->raiz;
             }
         }
         else /* mesma coisa só que para o caso de ser o filho direito de um pai */
         {
-            No *sibling = node->pai->esq;
+            No *sibling = no->pai->esq;
             if (sibling->cor == Vermelho)
             {
                 sibling->cor = Preto;
-                node->pai->cor = Vermelho;
-                rotacaoDireita(arv, node->pai);
-                sibling = node->pai->esq;
+                no->pai->cor = Vermelho;
+                rotacaoDireita(arv, no->pai);
+                sibling = no->pai->esq;
             }
             if (sibling->dir->cor == Preto && sibling->esq->cor == Preto)
             {
                 sibling->cor = Vermelho;
-                node = node->pai;
+                no = no->pai;
             }
             else
             {
@@ -289,57 +289,57 @@ void rb_delete_fixup(ARVORE_RUBRO_NEGRA *arv, No *node)
                     sibling->dir->cor = Preto;
                     sibling->cor = Vermelho;
                     rotacaoEsquerda(arv, sibling);
-                    sibling = node->pai->esq;
+                    sibling = no->pai->esq;
                 }
-                sibling->cor = node->pai->cor;
-                node->pai->cor = Preto;
+                sibling->cor = no->pai->cor;
+                no->pai->cor = Preto;
                 sibling->esq->cor = Preto;
-                rotacaoDireita(arv, node->pai);
-                node = arv->raiz;
+                rotacaoDireita(arv, no->pai);
+                no = arv->raiz;
             }
         }
     }
-    node->cor = Preto;
+    no->cor = Preto;
 }
 
-void rb_delete(ARVORE_RUBRO_NEGRA *arv, No *node)
+void rb_delete(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    No *successor = node;
+    No *successor = no;
     No *children;
     enum COR successor_orignal_cor = successor->cor;
     /* caso um dos lados estiver NULL entao basta transplantar o lado
     não nulo para o nó que deseja remover
      */
-    if (node->esq == arv->NIL) {
-        children = node->dir;
-        rb_transplant(arv, node, node->dir);
+    if (no->esq == arv->NIL) {
+        children = no->dir;
+        rb_transplant(arv, no, no->dir);
     }
-    else if (node->dir == arv->NIL) {
-        children = node->esq;
-        rb_transplant(arv, node, node->esq);
+    else if (no->dir == arv->NIL) {
+        children = no->esq;
+        rb_transplant(arv, no, no->esq);
     }
     /* caso nenhum os 2 lados tenham filhos */
     else {
-        successor = minimum(arv, node->dir);
+        successor = minimum(arv, no->dir);
         children = successor->dir;
-        successor_orignal_cor = successor->cor; /* preciso guardar a cor para colocar no node que vai ser removido */
-        /* caso o sucessor seja filho imediato de node 
+        successor_orignal_cor = successor->cor; /* preciso guardar a cor para colocar no no que vai ser removido */
+        /* caso o sucessor seja filho imediato de no 
         eu tenho que ter certeza que ele esta apontando
-        para node pois se children for nulo entao teremos 
+        para no pois se children for nulo entao teremos 
         problemas na hora de balancear
          */
-        if (successor->pai == node) {
+        if (successor->pai == no) {
             children->pai = successor;
         }
         else {
             rb_transplant(arv, successor, successor->dir);
-            successor->dir = node->dir;
+            successor->dir = no->dir;
             successor->dir->pai = successor;
         }
-        rb_transplant(arv, node, successor);
-        successor->esq = node->esq;
+        rb_transplant(arv, no, successor);
+        successor->esq = no->esq;
         successor->esq->pai = successor;
-        successor->cor = node->cor;
+        successor->cor = no->cor;
     }
     /* se o no sucessor  */
     if (successor_orignal_cor == Preto)
