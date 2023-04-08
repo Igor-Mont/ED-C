@@ -51,7 +51,7 @@ red_black_tree *new_red_black_tree()
     return t;
 }
 
-void esqRotate(red_black_tree *tree,tree_node *node)
+void rotacaoEsquerda(red_black_tree *tree,tree_node *node)
 {
     tree_node *dir = node->dir;
     node->dir = dir->esq;
@@ -75,7 +75,7 @@ void esqRotate(red_black_tree *tree,tree_node *node)
     node->parent = dir;
 }
 
-void dirRotate(red_black_tree *tree, tree_node *node)
+void rotacaoDireita(red_black_tree *tree, tree_node *node)
 {
     tree_node *esq = node->esq;
     node->esq = esq->dir;
@@ -122,12 +122,12 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
                 // case2
                 if (node == parent->dir) { 
                     node = node->parent; // marked node.parent as new node
-                    esqRotate(tree, node);
+                    rotacaoEsquerda(tree, node);
                 }
                 // case3
                 node->parent->color = Black;       
                 node->parent->parent->color = Red;
-                dirRotate(tree, node->parent->parent);
+                rotacaoDireita(tree, node->parent->parent);
             }
         }
         else
@@ -146,11 +146,11 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
                 if (node == node->parent->esq)
                 {
                     node = node->parent; // marked node.parent as new node
-                    dirRotate(tree, node);
+                    rotacaoDireita(tree, node);
                 }
                 node->parent->color = Black;       // made parent black
                 node->parent->parent->color = Red; // made parent red
-                esqRotate(tree, node->parent->parent);
+                rotacaoEsquerda(tree, node->parent->parent);
             }
         }
     }
@@ -218,10 +218,10 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
               */
             if (sibling->color == Red)
             {
-                //recolorToesqRotate()
+                //recolorTorotacaoEsquerda()
                 sibling->color = Black;
                 node->parent->color = Red;
-                esqRotate(tree, node->parent);
+                rotacaoEsquerda(tree, node->parent);
                 //updateSibling()
                 sibling = node->parent->dir;
             }
@@ -238,7 +238,7 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
                     //recolorir
                     sibling->color = Red;
                     sibling->esq->color = Black;
-                    dirRotate(tree, sibling);
+                    rotacaoDireita(tree, sibling);
                     //atualizando irmao
                     sibling = node->parent->dir;
                 }
@@ -246,7 +246,7 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
                 sibling->color = node->parent->color;
                 node->parent->color = Black;
                 sibling->dir->color = Black;
-                esqRotate(tree, node->parent);
+                rotacaoEsquerda(tree, node->parent);
                 node = tree->root;
             }
         }
@@ -257,7 +257,7 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
             {
                 sibling->color = Black;
                 node->parent->color = Red;
-                dirRotate(tree, node->parent);
+                rotacaoDireita(tree, node->parent);
                 sibling = node->parent->esq;
             }
             if (sibling->dir->color == Black && sibling->esq->color == Black)
@@ -271,13 +271,13 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
                 {
                     sibling->dir->color = Black;
                     sibling->color = Red;
-                    esqRotate(tree, sibling);
+                    rotacaoEsquerda(tree, sibling);
                     sibling = node->parent->esq;
                 }
                 sibling->color = node->parent->color;
                 node->parent->color = Black;
                 sibling->esq->color = Black;
-                dirRotate(tree, node->parent);
+                rotacaoDireita(tree, node->parent);
                 node = tree->root;
             }
         }
