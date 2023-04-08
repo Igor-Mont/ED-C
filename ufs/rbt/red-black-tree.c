@@ -7,26 +7,24 @@ enum COR
     Preto
 };
 
-typedef struct tree_node
+typedef struct estrutura
 {
     int valor;
-    struct tree_node *dir;
-    struct tree_node *esq;
-    struct tree_node *pai;
+    struct estrutura *dir;
+    struct estrutura *esq;
+    struct estrutura *pai;
     enum COR cor;
-} tree_node;
+} No;
 
-typedef struct red_black_tree
+typedef struct arvore
 {
-    tree_node *root;
-    tree_node *NIL;
-} red_black_tree;
+    No *raiz;
+    No *NIL;
+} ARVORE_RUBRO_NEGRA;
 
-tree_node* globalRoot = NULL;
-
-tree_node *new_RBTree(int valor)
+No *criarNoARB(int valor)
 {
-    tree_node *n = malloc(sizeof(tree_node));
+    No *n = malloc(sizeof(No));
     n->esq = NULL;
     n->dir = NULL;
     n->pai = NULL;
@@ -36,52 +34,52 @@ tree_node *new_RBTree(int valor)
     return n;
 }
 
-red_black_tree *new_red_black_tree()
+ARVORE_RUBRO_NEGRA *criaARB()
 {
-    red_black_tree *t = malloc(sizeof(red_black_tree));
-    tree_node *nil_node = malloc(sizeof(tree_node));
+    ARVORE_RUBRO_NEGRA *t = malloc(sizeof(ARVORE_RUBRO_NEGRA));
+    No *nil_node = malloc(sizeof(No));
     nil_node->esq = NULL;
     nil_node->dir = NULL;
     nil_node->pai = NULL;
     nil_node->cor = Preto;
     nil_node->valor = 0;
     t->NIL = nil_node;
-    t->root = t->NIL;
+    t->raiz = t->NIL;
 
     return t;
 }
 
-tree_node* search(red_black_tree* t, int value) {
-    // Percorre a árvore a partir da raiz
-    while (t->root != t->NIL && t->root->valor != value) {
-        if (value < t->root->valor) {
-            t->root = t->root->esq;
+No* buscaARB(ARVORE_RUBRO_NEGRA* t, int value) {
+    // Percorre a árvore a partir da raiz 
+    while (t->raiz != t->NIL && t->raiz->valor != value) {
+        if (value < t->raiz->valor) {
+            t->raiz = t->raiz->esq;
         } else {
-            t->root = t->root->dir;
+            t->raiz = t->raiz->dir;
         }
     }
     
     // Verifica se o valor foi encontrado ou não
-    if (t->root == t->NIL) {
+    if (t->raiz == t->NIL) {
         printf("Valor nao encontrado na arvore.\n");
         return NULL;
     } else {
         printf("Valor encontrado na arvore.\n");
-        return t->root;
+        return t->raiz;
     }
 }
 
-void rotacaoEsquerda(red_black_tree *tree,tree_node *node)
+void rotacaoEsquerda(ARVORE_RUBRO_NEGRA *tree,No *node)
 {
-    tree_node *dir = node->dir;
+    No *dir = node->dir;
     node->dir = dir->esq;
     if (dir->esq != tree->NIL) {
         dir->esq->pai = node;
     }
     dir->pai = node->pai;
     if (node->pai == tree->NIL)
-    { // node is root
-        tree->root = dir;
+    { // node is raiz
+        tree->raiz = dir;
     }
     else if (node == node->pai->esq)
     { // node is esq child
@@ -95,9 +93,9 @@ void rotacaoEsquerda(red_black_tree *tree,tree_node *node)
     node->pai = dir;
 }
 
-void rotacaoDireita(red_black_tree *tree, tree_node *node)
+void rotacaoDireita(ARVORE_RUBRO_NEGRA *tree, No *node)
 {
-    tree_node *esq = node->esq;
+    No *esq = node->esq;
     node->esq = esq->dir;
     if (esq->dir != tree->NIL)
     {
@@ -105,8 +103,8 @@ void rotacaoDireita(red_black_tree *tree, tree_node *node)
     }
     esq->pai = node->pai;
     if (node->pai == tree->NIL)
-    { // node is root
-        tree->root = esq;
+    { // node is raiz
+        tree->raiz = esq;
     }
     else if (node == node->pai->dir)
     { // node is esq child
@@ -120,15 +118,15 @@ void rotacaoDireita(red_black_tree *tree, tree_node *node)
     node->pai = esq;
 }
 
-void insertion_fixup(red_black_tree *tree, tree_node *node) {
+void insertion_fixup(ARVORE_RUBRO_NEGRA *tree, No *node) {
     while (node->pai->cor == Vermelho) {   
-        tree_node * pai = node->pai;
-        tree_node * grandpai = node->pai->pai;
+        No * pai = node->pai;
+        No * grandpai = node->pai->pai;
         //  pai            .esq
         if (pai == grandpai->esq) // o nó pai é filho esquerdo de um avó
         {
 
-            tree_node *uncle = grandpai->dir; // tio de node
+            No *uncle = grandpai->dir; // tio de node
             //tio vermelho
             if (uncle->cor == Vermelho)
             { // caso 1
@@ -152,7 +150,7 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
         }
         else
         {                                           // node.pai is the dir child
-            tree_node *uncle = node->pai->pai->esq; // uncle of node
+            No *uncle = node->pai->pai->esq; // uncle of node
 
             if (uncle->cor == Vermelho)
             {
@@ -174,13 +172,13 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
             }
         }
     }
-    tree->root->cor = Preto;
+    tree->raiz->cor = Preto;
 }
 
-void insert(red_black_tree *tree, tree_node *newNode) 
+void insert(ARVORE_RUBRO_NEGRA *tree, No *newNode) 
 {
-    tree_node *paiOfNewNode = tree->NIL;
-    tree_node *current = tree->root;
+    No *paiOfNewNode = tree->NIL;
+    No *current = tree->raiz;
 
     /* encontra o pai do novo newNode */
     while (current != tree->NIL) {
@@ -195,7 +193,7 @@ void insert(red_black_tree *tree, tree_node *newNode)
 
     //se arvore vazia, o newNode é raiz, se for menor que seu pai adiciona a esquerda, senao a direita
     if (paiOfNewNode == tree->NIL)  {
-        tree->root = newNode;
+        tree->raiz = newNode;
     }
     else if (newNode->valor < paiOfNewNode->valor)
         paiOfNewNode->esq = newNode;
@@ -208,10 +206,10 @@ void insert(red_black_tree *tree, tree_node *newNode)
     insertion_fixup(tree, newNode);
 }
 
-void rb_transplant(red_black_tree *tree, tree_node *node, tree_node *children) 
+void rb_transplant(ARVORE_RUBRO_NEGRA *tree, No *node, No *children) 
 {
     if (node->pai == tree->NIL)
-        tree->root = children;
+        tree->raiz = children;
     else if (node == node->pai->esq)
         node->pai->esq = children;
     else
@@ -219,20 +217,20 @@ void rb_transplant(red_black_tree *tree, tree_node *node, tree_node *children)
     children->pai = node->pai;
 }
 
-tree_node *minimum(red_black_tree *tree, tree_node *node)
+No *minimum(ARVORE_RUBRO_NEGRA *tree, No *node)
 {
     while (node->esq != tree->NIL)
         node = node->esq;
     return node;
 }
 
-void rb_delete_fixup(red_black_tree *tree, tree_node *node)
+void rb_delete_fixup(ARVORE_RUBRO_NEGRA *tree, No *node)
 {
-    while (node != tree->root && node->cor == Preto)
+    while (node != tree->raiz && node->cor == Preto)
     { /* se o no é filho esquerdo do pai */
         if (node == node->pai->esq)
         {
-            tree_node *sibling = node->pai->dir;
+            No *sibling = node->pai->dir;
             /* CASO 1; se o irmao for vermelho, recore o irmao e pai,
             para fazer a rotação
               */
@@ -267,12 +265,12 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
                 node->pai->cor = Preto;
                 sibling->dir->cor = Preto;
                 rotacaoEsquerda(tree, node->pai);
-                node = tree->root;
+                node = tree->raiz;
             }
         }
         else /* mesma coisa só que para o caso de ser o filho direito de um pai */
         {
-            tree_node *sibling = node->pai->esq;
+            No *sibling = node->pai->esq;
             if (sibling->cor == Vermelho)
             {
                 sibling->cor = Preto;
@@ -298,17 +296,17 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
                 node->pai->cor = Preto;
                 sibling->esq->cor = Preto;
                 rotacaoDireita(tree, node->pai);
-                node = tree->root;
+                node = tree->raiz;
             }
         }
     }
     node->cor = Preto;
 }
 
-void rb_delete(red_black_tree *tree, tree_node *node)
+void rb_delete(ARVORE_RUBRO_NEGRA *tree, No *node)
 {
-    tree_node *successor = node;
-    tree_node *children;
+    No *successor = node;
+    No *children;
     enum COR successor_orignal_cor = successor->cor;
     /* caso um dos lados estiver NULL entao basta transplantar o lado
     não nulo para o nó que deseja remover
@@ -349,7 +347,7 @@ void rb_delete(red_black_tree *tree, tree_node *node)
         rb_delete_fixup(tree, children);
 }
 
-void inorder(red_black_tree *t, tree_node *n)
+void inorder(ARVORE_RUBRO_NEGRA *t, No *n)
 {
     if (n != t->NIL)
     {
@@ -361,22 +359,22 @@ void inorder(red_black_tree *t, tree_node *n)
 
 int main()
 {
-    red_black_tree *t = new_red_black_tree();
+    ARVORE_RUBRO_NEGRA *t = criaARB();
 
-    tree_node *a, *b, *c, *d, *e, *f, *g, *h, *i, *j, *k, *l, *m;
-    a = new_RBTree(10);
-    b = new_RBTree(20);
-    c = new_RBTree(30);
-    d = new_RBTree(100);
-    e = new_RBTree(90);
-    f = new_RBTree(40);
-    g = new_RBTree(50);
-    h = new_RBTree(60);
-    i = new_RBTree(70);
-    j = new_RBTree(80);
-    k = new_RBTree(150);
-    l = new_RBTree(110);
-    m = new_RBTree(120);
+    No *a, *b, *c, *d, *e, *f, *g, *h, *i, *j, *k, *l, *m;
+    a = criarNoARB(10);
+    b = criarNoARB(20);
+    c = criarNoARB(30);
+    d = criarNoARB(100);
+    e = criarNoARB(90);
+    f = criarNoARB(40);
+    g = criarNoARB(50);
+    h = criarNoARB(60);
+    i = criarNoARB(70);
+    j = criarNoARB(80);
+    k = criarNoARB(150);
+    l = criarNoARB(110);
+    m = criarNoARB(120);
 
     insert(t, a);
     insert(t, b);
@@ -397,9 +395,9 @@ int main()
     rb_delete(t, g);
     rb_delete(t, b);
 
-    inorder(t, t->root);
+    inorder(t, t->raiz);
 
-    search(t, 11);
+    buscaARB(t, 11);
 
     return 0;
 }
