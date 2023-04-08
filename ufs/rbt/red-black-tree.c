@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum COLOR
+enum COR
 {
     Red,
     Black
@@ -13,7 +13,7 @@ typedef struct tree_node
     struct tree_node *dir;
     struct tree_node *esq;
     struct tree_node *parent;
-    enum COLOR color;
+    enum COR cor;
 } tree_node;
 
 typedef struct red_black_tree
@@ -31,7 +31,7 @@ tree_node *new_RBTree(int data)
     n->dir = NULL;
     n->parent = NULL;
     n->data = data;
-    n->color = Red;
+    n->cor = Red;
 
     return n;
 }
@@ -43,7 +43,7 @@ red_black_tree *new_red_black_tree()
     nil_node->esq = NULL;
     nil_node->dir = NULL;
     nil_node->parent = NULL;
-    nil_node->color = Black;
+    nil_node->cor = Black;
     nil_node->data = 0;
     t->NIL = nil_node;
     t->root = t->NIL;
@@ -101,7 +101,7 @@ void rotacaoDireita(red_black_tree *tree, tree_node *node)
 }
 
 void insertion_fixup(red_black_tree *tree, tree_node *node) {
-    while (node->parent->color == Red) {   
+    while (node->parent->cor == Red) {   
         tree_node * parent = node->parent;
         tree_node * grandparent = node->parent->parent;
         //  parent            .esq
@@ -110,11 +110,11 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
 
             tree_node *uncle = grandparent->dir; // tio de node
             //tio vermelho
-            if (uncle->color == Red)
+            if (uncle->cor == Red)
             { // caso 1
-                parent->color = Black;
-                uncle->color = Black;
-                grandparent->color = Red;
+                parent->cor = Black;
+                uncle->cor = Black;
+                grandparent->cor = Red;
                 node = grandparent;
                 //proxima iteração...
             }
@@ -125,8 +125,8 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
                     rotacaoEsquerda(tree, node);
                 }
                 // case3
-                node->parent->color = Black;       
-                node->parent->parent->color = Red;
+                node->parent->cor = Black;       
+                node->parent->parent->cor = Red;
                 rotacaoDireita(tree, node->parent->parent);
             }
         }
@@ -134,11 +134,11 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
         {                                           // node.parent is the dir child
             tree_node *uncle = node->parent->parent->esq; // uncle of node
 
-            if (uncle->color == Red)
+            if (uncle->cor == Red)
             {
-                node->parent->color = Black;
-                uncle->color = Black;
-                node->parent->parent->color = Red;
+                node->parent->cor = Black;
+                uncle->cor = Black;
+                node->parent->parent->cor = Red;
                 node = node->parent->parent;
             }
             else
@@ -148,13 +148,13 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
                     node = node->parent; // marked node.parent as new node
                     rotacaoDireita(tree, node);
                 }
-                node->parent->color = Black;       // made parent black
-                node->parent->parent->color = Red; // made parent red
+                node->parent->cor = Black;       // made parent black
+                node->parent->parent->cor = Red; // made parent red
                 rotacaoEsquerda(tree, node->parent->parent);
             }
         }
     }
-    tree->root->color = Black;
+    tree->root->cor = Black;
 }
 
 void insert(red_black_tree *tree, tree_node *newNode) 
@@ -208,44 +208,44 @@ tree_node *minimum(red_black_tree *tree, tree_node *node)
 
 void rb_delete_fixup(red_black_tree *tree, tree_node *node)
 {
-    while (node != tree->root && node->color == Black)
+    while (node != tree->root && node->cor == Black)
     { /* se o no é filho esquerdo do pai */
         if (node == node->parent->esq)
         {
             tree_node *sibling = node->parent->dir;
-            /* CASO 1; se o irmao for vermelho, recolore o irmao e pai,
+            /* CASO 1; se o irmao for vermelho, recore o irmao e pai,
             para fazer a rotação
               */
-            if (sibling->color == Red)
+            if (sibling->cor == Red)
             {
-                //recolorTorotacaoEsquerda()
-                sibling->color = Black;
-                node->parent->color = Red;
+                //recorTorotacaoEsquerda()
+                sibling->cor = Black;
+                node->parent->cor = Red;
                 rotacaoEsquerda(tree, node->parent);
                 //updateSibling()
                 sibling = node->parent->dir;
             }
-            /* CASO 2; irmao preto entao recolore e passa para o pai */
-            if (sibling->esq->color == Black && sibling->dir->color == Black)
+            /* CASO 2; irmao preto entao recore e passa para o pai */
+            if (sibling->esq->cor == Black && sibling->dir->cor == Black)
             {
-                sibling->color = Red; //recolor sibling
+                sibling->cor = Red; //recor sibling
                 node = node->parent;
             }
             else
             {   /* CASO 3: filho esquedo vermelho e direito preto */
-                if (sibling->dir->color == Black)
+                if (sibling->dir->cor == Black)
                 {
-                    //recolorir
-                    sibling->color = Red;
-                    sibling->esq->color = Black;
+                    //recorir
+                    sibling->cor = Red;
+                    sibling->esq->cor = Black;
                     rotacaoDireita(tree, sibling);
                     //atualizando irmao
                     sibling = node->parent->dir;
                 }
                 /* CASO 4: filho direito vermelho */
-                sibling->color = node->parent->color;
-                node->parent->color = Black;
-                sibling->dir->color = Black;
+                sibling->cor = node->parent->cor;
+                node->parent->cor = Black;
+                sibling->dir->cor = Black;
                 rotacaoEsquerda(tree, node->parent);
                 node = tree->root;
             }
@@ -253,43 +253,43 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
         else /* mesma coisa só que para o caso de ser o filho direito de um pai */
         {
             tree_node *sibling = node->parent->esq;
-            if (sibling->color == Red)
+            if (sibling->cor == Red)
             {
-                sibling->color = Black;
-                node->parent->color = Red;
+                sibling->cor = Black;
+                node->parent->cor = Red;
                 rotacaoDireita(tree, node->parent);
                 sibling = node->parent->esq;
             }
-            if (sibling->dir->color == Black && sibling->esq->color == Black)
+            if (sibling->dir->cor == Black && sibling->esq->cor == Black)
             {
-                sibling->color = Red;
+                sibling->cor = Red;
                 node = node->parent;
             }
             else
             {
-                if (sibling->esq->color == Black)
+                if (sibling->esq->cor == Black)
                 {
-                    sibling->dir->color = Black;
-                    sibling->color = Red;
+                    sibling->dir->cor = Black;
+                    sibling->cor = Red;
                     rotacaoEsquerda(tree, sibling);
                     sibling = node->parent->esq;
                 }
-                sibling->color = node->parent->color;
-                node->parent->color = Black;
-                sibling->esq->color = Black;
+                sibling->cor = node->parent->cor;
+                node->parent->cor = Black;
+                sibling->esq->cor = Black;
                 rotacaoDireita(tree, node->parent);
                 node = tree->root;
             }
         }
     }
-    node->color = Black;
+    node->cor = Black;
 }
 
 void rb_delete(red_black_tree *tree, tree_node *node)
 {
     tree_node *successor = node;
     tree_node *children;
-    enum COLOR successor_orignal_color = successor->color;
+    enum COR successor_orignal_cor = successor->cor;
     /* caso um dos lados estiver NULL entao basta transplantar o lado
     não nulo para o nó que deseja remover
      */
@@ -305,7 +305,7 @@ void rb_delete(red_black_tree *tree, tree_node *node)
     else {
         successor = minimum(tree, node->dir);
         children = successor->dir;
-        successor_orignal_color = successor->color; /* preciso guardar a cor para colocar no node que vai ser removido */
+        successor_orignal_cor = successor->cor; /* preciso guardar a cor para colocar no node que vai ser removido */
         /* caso o sucessor seja filho imediato de node 
         eu tenho que ter certeza que ele esta apontando
         para node pois se children for nulo entao teremos 
@@ -322,10 +322,10 @@ void rb_delete(red_black_tree *tree, tree_node *node)
         rb_transplant(tree, node, successor);
         successor->esq = node->esq;
         successor->esq->parent = successor;
-        successor->color = node->color;
+        successor->cor = node->cor;
     }
     /* se o no sucessor  */
-    if (successor_orignal_color == Black)
+    if (successor_orignal_cor == Black)
         rb_delete_fixup(tree, children);
 }
 
