@@ -9,7 +9,7 @@ enum COR
 
 typedef struct tree_node
 {
-    int data;
+    int valor;
     struct tree_node *dir;
     struct tree_node *esq;
     struct tree_node *pai;
@@ -24,13 +24,13 @@ typedef struct red_black_tree
 
 tree_node* globalRoot = NULL;
 
-tree_node *new_RBTree(int data)
+tree_node *new_RBTree(int valor)
 {
     tree_node *n = malloc(sizeof(tree_node));
     n->esq = NULL;
     n->dir = NULL;
     n->pai = NULL;
-    n->data = data;
+    n->valor = valor;
     n->cor = Red;
 
     return n;
@@ -44,11 +44,31 @@ red_black_tree *new_red_black_tree()
     nil_node->dir = NULL;
     nil_node->pai = NULL;
     nil_node->cor = Black;
-    nil_node->data = 0;
+    nil_node->valor = 0;
     t->NIL = nil_node;
     t->root = t->NIL;
 
     return t;
+}
+
+tree_node* search(red_black_tree* t, int value) {
+    // Percorre a árvore a partir da raiz
+    while (t->root != t->NIL && t->root->valor != value) {
+        if (value < t->root->valor) {
+            t->root = t->root->esq;
+        } else {
+            t->root = t->root->dir;
+        }
+    }
+    
+    // Verifica se o valor foi encontrado ou não
+    if (t->root == t->NIL) {
+        printf("Valor nao encontrado na arvore.\n");
+        return NULL;
+    } else {
+        printf("Valor encontrado na arvore.\n");
+        return t->root;
+    }
 }
 
 void rotacaoEsquerda(red_black_tree *tree,tree_node *node)
@@ -165,7 +185,7 @@ void insert(red_black_tree *tree, tree_node *newNode)
     /* encontra o pai do novo newNode */
     while (current != tree->NIL) {
         paiOfNewNode = current;
-        if (newNode->data < current->data)
+        if (newNode->valor < current->valor)
             current = current->esq;
         else
             current = current->dir;
@@ -177,7 +197,7 @@ void insert(red_black_tree *tree, tree_node *newNode)
     if (paiOfNewNode == tree->NIL)  {
         tree->root = newNode;
     }
-    else if (newNode->data < paiOfNewNode->data)
+    else if (newNode->valor < paiOfNewNode->valor)
         paiOfNewNode->esq = newNode;
     else
         paiOfNewNode->dir = newNode;
@@ -334,7 +354,7 @@ void inorder(red_black_tree *t, tree_node *n)
     if (n != t->NIL)
     {
         inorder(t, n->esq);
-        printf("%d\n", n->data);
+        printf("%d\n", n->valor);
         inorder(t, n->dir);
     }
 }
@@ -378,6 +398,8 @@ int main()
     rb_delete(t, b);
 
     inorder(t, t->root);
+
+    search(t, 11);
 
     return 0;
 }
