@@ -195,7 +195,7 @@ void inserir(ARVORE_RUBRO_NEGRA *arv, No *NoNovo)
 
 void transplantarSubArvore(ARVORE_RUBRO_NEGRA *arv, No *no, No *filho) 
 {
-    if (no->pai == arv->NIL)
+    if (no->pai == arv->NIL) // Se o pai do nó for nulo.
         arv->raiz = filho;
     else if (no == no->pai->esq)
         no->pai->esq = filho;
