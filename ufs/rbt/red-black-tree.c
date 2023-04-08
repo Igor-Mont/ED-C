@@ -69,25 +69,21 @@ No* buscaARB(ARVORE_RUBRO_NEGRA* arv, int valor) {
 }
 
 void rotacaoEsquerda(ARVORE_RUBRO_NEGRA *arv, No *no)
-{
+{   
     No *dir = no->dir;
     no->dir = dir->esq;
-    if (dir->esq != arv->NIL) {
+
+    if (dir->esq != arv->NIL)
         dir->esq->pai = no;
-    }
     dir->pai = no->pai;
-    if (no->pai == arv->NIL)
-    { // no is raiz
+
+    if (no->pai == arv->NIL) // Nó é raiz.
         arv->raiz = dir;
-    }
-    else if (no == no->pai->esq)
-    { // no is esq child
+    else if (no == no->pai->esq) // Nó é filho esquerdo.
         no->pai->esq = dir;
-    }
-    else
-    { // no is dir child
+    else // Nó é filho direito.
         no->pai->dir = dir;
-    }
+
     dir->esq = no;
     no->pai = dir;
 }
@@ -96,23 +92,18 @@ void rotacaoDireita(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
     No *esq = no->esq;
     no->esq = esq->dir;
+
     if (esq->dir != arv->NIL)
-    {
         esq->dir->pai = no;
-    }
     esq->pai = no->pai;
-    if (no->pai == arv->NIL)
-    { // no is raiz
+
+    if (no->pai == arv->NIL) // Nó é raiz.
         arv->raiz = esq;
-    }
-    else if (no == no->pai->dir)
-    { // no is esq child
+    else if (no == no->pai->dir) // Nó é filho direito.
         no->pai->dir = esq;
-    }
-    else
-    { // no is dir child
+    else // Nó é filho esquerdo.
         no->pai->esq = esq;
-    }
+        
     esq->dir = no;
     no->pai = esq;
 }
