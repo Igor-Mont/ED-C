@@ -205,7 +205,7 @@ void insercao(ARVORE_RUBRO_NEGRA *arv, No *newNode)
     balancearInsercao(arv, newNode);
 }
 
-void rb_transplant(ARVORE_RUBRO_NEGRA *arv, No *no, No *children) 
+void transplantarSubArvore(ARVORE_RUBRO_NEGRA *arv, No *no, No *children) 
 {
     if (no->pai == arv->NIL)
         arv->raiz = children;
@@ -216,7 +216,7 @@ void rb_transplant(ARVORE_RUBRO_NEGRA *arv, No *no, No *children)
     children->pai = no->pai;
 }
 
-No *minimum(ARVORE_RUBRO_NEGRA *arv, No *no)
+No *obterSucessor(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
     while (no->esq != arv->NIL)
         no = no->esq;
@@ -312,15 +312,15 @@ void rb_delete(ARVORE_RUBRO_NEGRA *arv, No *no)
      */
     if (no->esq == arv->NIL) {
         children = no->dir;
-        rb_transplant(arv, no, no->dir);
+        transplantarSubArvore(arv, no, no->dir);
     }
     else if (no->dir == arv->NIL) {
         children = no->esq;
-        rb_transplant(arv, no, no->esq);
+        transplantarSubArvore(arv, no, no->esq);
     }
     /* caso nenhum os 2 lados tenham filhos */
     else {
-        successor = minimum(arv, no->dir);
+        successor = obterSucessor(arv, no->dir);
         children = successor->dir;
         successor_orignal_cor = successor->cor; /* preciso guardar a cor para colocar no no que vai ser removido */
         /* caso o sucessor seja filho imediato de no 
@@ -332,11 +332,11 @@ void rb_delete(ARVORE_RUBRO_NEGRA *arv, No *no)
             children->pai = successor;
         }
         else {
-            rb_transplant(arv, successor, successor->dir);
+            transplantarSubArvore(arv, successor, successor->dir);
             successor->dir = no->dir;
             successor->dir->pai = successor;
         }
-        rb_transplant(arv, no, successor);
+        transplantarSubArvore(arv, no, successor);
         successor->esq = no->esq;
         successor->esq->pai = successor;
         successor->cor = no->cor;
