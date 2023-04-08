@@ -213,75 +213,79 @@ No *obterSucessor(ARVORE_RUBRO_NEGRA *arv, No *no)
 
 void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
 {
-    while (no != arv->raiz && no->cor == Preto)
-    { /* se o no é filho esquerdo do pai */
-        if (no == no->pai->esq)
+    while (no != arv->raiz && no->cor == Preto) // Nó diferente da raiz e nó é preto.
+    { 
+        if (no == no->pai->esq) // Nó é filho esquerdo do pai.
         {
-            No *sibling = no->pai->dir;
-            /* CASO 1; se o irmao for vermelho, recore o irmao e pai,
-            para fazer a rotação
-              */
-            if (sibling->cor == Vermelho)
+            No *irmao = no->pai->dir;
+            if (irmao->cor == Vermelho) // (Caso 1) Irmão é vermelho
             {
-                //recorTorotacaoEsquerda()
-                sibling->cor = Preto;
-                no->pai->cor = Vermelho;
+                no->pai->cor = Vermelho; // Pai fica vermelho.
+                irmao->cor = Preto; // Irmão fica preto.
+
                 rotacaoEsquerda(arv, no->pai);
-                //updateSibling()
-                sibling = no->pai->dir;
+
+                irmao = no->pai->dir; // Atualiza o irmão.
             }
-            /* CASO 2; irmao preto entao recore e passa para o pai */
-            if (sibling->esq->cor == Preto && sibling->dir->cor == Preto)
+            // (Caso 2) O irmão e seus filhos são pretos.
+            if (irmao->esq->cor == Preto && irmao->dir->cor == Preto)
             {
-                sibling->cor = Vermelho; //recor sibling
-                no = no->pai;
+                irmao->cor = Vermelho; // Irmão fica vermelho.
+                no = no->pai; // Atualiza o nó.
             }
             else
-            {   /* CASO 3: filho esquedo vermelho e direito preto */
-                if (sibling->dir->cor == Preto)
+            {   // (Caso 3) Filho esquerdo é vermelho e direito é preto.
+                if (irmao->dir->cor == Preto)
                 {
-                    //recorir
-                    sibling->cor = Vermelho;
-                    sibling->esq->cor = Preto;
-                    rotacaoDireita(arv, sibling);
-                    //atualizando irmao
-                    sibling = no->pai->dir;
+                    irmao->esq->cor = Preto; // Filho esquerdo do irmão fica preto.
+                    irmao->cor = Vermelho; // Irmão fica vermelho.
+
+                    rotacaoDireita(arv, irmao);
+
+                    irmao = no->pai->dir; // Atualiza o irmão.
                 }
-                /* CASO 4: filho direito vermelho */
-                sibling->cor = no->pai->cor;
+                // (Caso 4) Filho direito é vermelho.
+                irmao->cor = no->pai->cor;
                 no->pai->cor = Preto;
-                sibling->dir->cor = Preto;
+                irmao->dir->cor = Preto;
+
                 rotacaoEsquerda(arv, no->pai);
                 no = arv->raiz;
             }
         }
-        else /* mesma coisa só que para o caso de ser o filho direito de um pai */
+        else // Nó é filho esquerdo do pai.
         {
-            No *sibling = no->pai->esq;
-            if (sibling->cor == Vermelho)
+            No *irmao = no->pai->esq;
+            if (irmao->cor == Vermelho) // (Caso 1) Irmão é vermelho
             {
-                sibling->cor = Preto;
-                no->pai->cor = Vermelho;
+                no->pai->cor = Vermelho; // Pai fica vermelho.
+                irmao->cor = Preto; // Irmão fica preto.
+
                 rotacaoDireita(arv, no->pai);
-                sibling = no->pai->esq;
+                irmao = no->pai->esq; // Atualiza o irmão.
             }
-            if (sibling->dir->cor == Preto && sibling->esq->cor == Preto)
+            // (Caso 2) O irmão e seus filhos são pretos.
+            if (irmao->dir->cor == Preto && irmao->esq->cor == Preto)
             {
-                sibling->cor = Vermelho;
-                no = no->pai;
+                irmao->cor = Vermelho; // Irmão fica vermelho.
+                no = no->pai; // Atualiza o nó.
             }
             else
-            {
-                if (sibling->esq->cor == Preto)
+            {   // (Caso 3) Filho esquerdo é vermelho e direito é preto.
+                if (irmao->esq->cor == Preto)
                 {
-                    sibling->dir->cor = Preto;
-                    sibling->cor = Vermelho;
-                    rotacaoEsquerda(arv, sibling);
-                    sibling = no->pai->esq;
+                    irmao->dir->cor = Preto; // / Filho direito do irmão fica preto.
+                    irmao->cor = Vermelho; // Irmão fica vermelho.
+
+                    rotacaoEsquerda(arv, irmao);
+
+                    irmao = no->pai->esq; // Atualiza o irmão.
                 }
-                sibling->cor = no->pai->cor;
+                // (Caso 4) Filho direito é vermelho.
+                irmao->cor = no->pai->cor;
                 no->pai->cor = Preto;
-                sibling->esq->cor = Preto;
+                irmao->esq->cor = Preto;
+
                 rotacaoDireita(arv, no->pai);
                 no = arv->raiz;
             }
