@@ -117,7 +117,7 @@ void rotacaoDireita(ARVORE_RUBRO_NEGRA *arv, No *no)
     no->pai = esq;
 }
 
-void insertion_fixup(ARVORE_RUBRO_NEGRA *arv, No *no) {
+void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
     while (no->pai->cor == Vermelho) {   
         No * pai = no->pai;
         No * grandpai = no->pai->pai;
@@ -174,7 +174,7 @@ void insertion_fixup(ARVORE_RUBRO_NEGRA *arv, No *no) {
     arv->raiz->cor = Preto;
 }
 
-void insert(ARVORE_RUBRO_NEGRA *arv, No *newNode) 
+void insercao(ARVORE_RUBRO_NEGRA *arv, No *newNode) 
 {
     No *paiOfNewNode = arv->NIL;
     No *current = arv->raiz;
@@ -202,7 +202,7 @@ void insert(ARVORE_RUBRO_NEGRA *arv, No *newNode)
     newNode->dir = arv->NIL;
     newNode->esq = arv->NIL;
 
-    insertion_fixup(arv, newNode);
+    balancearInsercao(arv, newNode);
 }
 
 void rb_transplant(ARVORE_RUBRO_NEGRA *arv, No *no, No *children) 
@@ -375,19 +375,19 @@ int main()
     l = criarNoARB(110);
     m = criarNoARB(120);
 
-    insert(t, a);
-    insert(t, b);
-    insert(t, c);
-    insert(t, d);
-    insert(t, e);
-    insert(t, f);
-    insert(t, g);
-    insert(t, h);
-    insert(t, i);
-    insert(t, j);
-    insert(t, k);
-    insert(t, l);
-    insert(t, m);
+    insercao(t, a);
+    insercao(t, b);
+    insercao(t, c);
+    insercao(t, d);
+    insercao(t, e);
+    insercao(t, f);
+    insercao(t, g);
+    insercao(t, h);
+    insercao(t, i);
+    insercao(t, j);
+    insercao(t, k);
+    insercao(t, l);
+    insercao(t, m);
 
     rb_delete(t, a);
     rb_delete(t, m);
