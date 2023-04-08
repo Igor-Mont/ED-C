@@ -205,15 +205,15 @@ void insercao(ARVORE_RUBRO_NEGRA *arv, No *newNode)
     balancearInsercao(arv, newNode);
 }
 
-void transplantarSubArvore(ARVORE_RUBRO_NEGRA *arv, No *no, No *children) 
+void transplantarSubArvore(ARVORE_RUBRO_NEGRA *arv, No *no, No *filho) 
 {
     if (no->pai == arv->NIL)
-        arv->raiz = children;
+        arv->raiz = filho;
     else if (no == no->pai->esq)
-        no->pai->esq = children;
+        no->pai->esq = filho;
     else
-        no->pai->dir = children;
-    children->pai = no->pai;
+        no->pai->dir = filho;
+    filho->pai = no->pai;
 }
 
 No *obterSucessor(ARVORE_RUBRO_NEGRA *arv, No *no)
