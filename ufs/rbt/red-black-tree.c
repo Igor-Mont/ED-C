@@ -163,35 +163,34 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
     arv->raiz->cor = Preto;
 }
 
-void inserir(ARVORE_RUBRO_NEGRA *arv, No *newNode) 
+void inserir(ARVORE_RUBRO_NEGRA *arv, No *NoNovo) 
 {
-    No *paiOfNewNode = arv->NIL;
-    No *current = arv->raiz;
+    No *paiNovoNo = arv->NIL;
+    No *NoAtual = arv->raiz;
 
-    /* encontra o pai do novo newNode */
-    while (current != arv->NIL) {
-        paiOfNewNode = current;
-        if (newNode->valor < current->valor)
-            current = current->esq;
+    // Encontra o pai do novo nó.
+    while (NoAtual != arv->NIL) {
+        paiNovoNo = NoAtual;
+        if (NoNovo->valor < NoAtual->valor)
+            NoAtual = NoAtual->esq;
         else
-            current = current->dir;
+            NoAtual = NoAtual->dir;
     }
 
-    newNode->pai = paiOfNewNode;
+    NoNovo->pai = paiNovoNo;
 
-    //se arvore vazia, o newNode é raiz, se for menor que seu pai adiciona a esquerda, senao a direita
-    if (paiOfNewNode == arv->NIL)  {
-        arv->raiz = newNode;
-    }
-    else if (newNode->valor < paiOfNewNode->valor)
-        paiOfNewNode->esq = newNode;
-    else
-        paiOfNewNode->dir = newNode;
+    // Se árvore vazia, o novo nó é a raiz.
+    if (paiNovoNo == arv->NIL)
+        arv->raiz = NoNovo;
+    else if (NoNovo->valor < paiNovoNo->valor) // Se for menor que seu pai adiciona a esquerda.
+        paiNovoNo->esq = NoNovo;
+    else // Se for maior que seu pai adiciona a direita.
+        paiNovoNo->dir = NoNovo;
 
-    newNode->dir = arv->NIL;
-    newNode->esq = arv->NIL;
+    NoNovo->dir = arv->NIL;
+    NoNovo->esq = arv->NIL;
 
-    balancearInsercao(arv, newNode);
+    balancearInsercao(arv, NoNovo);
 }
 
 void transplantarSubArvore(ARVORE_RUBRO_NEGRA *arv, No *no, No *filho) 
