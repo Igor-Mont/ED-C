@@ -3,8 +3,8 @@
 
 enum COR
 {
-    Red,
-    Black
+    Vermelho,
+    Preto
 };
 
 typedef struct tree_node
@@ -31,7 +31,7 @@ tree_node *new_RBTree(int valor)
     n->dir = NULL;
     n->pai = NULL;
     n->valor = valor;
-    n->cor = Red;
+    n->cor = Vermelho;
 
     return n;
 }
@@ -43,7 +43,7 @@ red_black_tree *new_red_black_tree()
     nil_node->esq = NULL;
     nil_node->dir = NULL;
     nil_node->pai = NULL;
-    nil_node->cor = Black;
+    nil_node->cor = Preto;
     nil_node->valor = 0;
     t->NIL = nil_node;
     t->root = t->NIL;
@@ -121,7 +121,7 @@ void rotacaoDireita(red_black_tree *tree, tree_node *node)
 }
 
 void insertion_fixup(red_black_tree *tree, tree_node *node) {
-    while (node->pai->cor == Red) {   
+    while (node->pai->cor == Vermelho) {   
         tree_node * pai = node->pai;
         tree_node * grandpai = node->pai->pai;
         //  pai            .esq
@@ -130,11 +130,11 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
 
             tree_node *uncle = grandpai->dir; // tio de node
             //tio vermelho
-            if (uncle->cor == Red)
+            if (uncle->cor == Vermelho)
             { // caso 1
-                pai->cor = Black;
-                uncle->cor = Black;
-                grandpai->cor = Red;
+                pai->cor = Preto;
+                uncle->cor = Preto;
+                grandpai->cor = Vermelho;
                 node = grandpai;
                 //proxima iteração...
             }
@@ -145,8 +145,8 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
                     rotacaoEsquerda(tree, node);
                 }
                 // case3
-                node->pai->cor = Black;       
-                node->pai->pai->cor = Red;
+                node->pai->cor = Preto;       
+                node->pai->pai->cor = Vermelho;
                 rotacaoDireita(tree, node->pai->pai);
             }
         }
@@ -154,11 +154,11 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
         {                                           // node.pai is the dir child
             tree_node *uncle = node->pai->pai->esq; // uncle of node
 
-            if (uncle->cor == Red)
+            if (uncle->cor == Vermelho)
             {
-                node->pai->cor = Black;
-                uncle->cor = Black;
-                node->pai->pai->cor = Red;
+                node->pai->cor = Preto;
+                uncle->cor = Preto;
+                node->pai->pai->cor = Vermelho;
                 node = node->pai->pai;
             }
             else
@@ -168,13 +168,13 @@ void insertion_fixup(red_black_tree *tree, tree_node *node) {
                     node = node->pai; // marked node.pai as new node
                     rotacaoDireita(tree, node);
                 }
-                node->pai->cor = Black;       // made pai black
-                node->pai->pai->cor = Red; // made pai red
+                node->pai->cor = Preto;       // made pai black
+                node->pai->pai->cor = Vermelho; // made pai red
                 rotacaoEsquerda(tree, node->pai->pai);
             }
         }
     }
-    tree->root->cor = Black;
+    tree->root->cor = Preto;
 }
 
 void insert(red_black_tree *tree, tree_node *newNode) 
@@ -228,7 +228,7 @@ tree_node *minimum(red_black_tree *tree, tree_node *node)
 
 void rb_delete_fixup(red_black_tree *tree, tree_node *node)
 {
-    while (node != tree->root && node->cor == Black)
+    while (node != tree->root && node->cor == Preto)
     { /* se o no é filho esquerdo do pai */
         if (node == node->pai->esq)
         {
@@ -236,36 +236,36 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
             /* CASO 1; se o irmao for vermelho, recore o irmao e pai,
             para fazer a rotação
               */
-            if (sibling->cor == Red)
+            if (sibling->cor == Vermelho)
             {
                 //recorTorotacaoEsquerda()
-                sibling->cor = Black;
-                node->pai->cor = Red;
+                sibling->cor = Preto;
+                node->pai->cor = Vermelho;
                 rotacaoEsquerda(tree, node->pai);
                 //updateSibling()
                 sibling = node->pai->dir;
             }
             /* CASO 2; irmao preto entao recore e passa para o pai */
-            if (sibling->esq->cor == Black && sibling->dir->cor == Black)
+            if (sibling->esq->cor == Preto && sibling->dir->cor == Preto)
             {
-                sibling->cor = Red; //recor sibling
+                sibling->cor = Vermelho; //recor sibling
                 node = node->pai;
             }
             else
             {   /* CASO 3: filho esquedo vermelho e direito preto */
-                if (sibling->dir->cor == Black)
+                if (sibling->dir->cor == Preto)
                 {
                     //recorir
-                    sibling->cor = Red;
-                    sibling->esq->cor = Black;
+                    sibling->cor = Vermelho;
+                    sibling->esq->cor = Preto;
                     rotacaoDireita(tree, sibling);
                     //atualizando irmao
                     sibling = node->pai->dir;
                 }
                 /* CASO 4: filho direito vermelho */
                 sibling->cor = node->pai->cor;
-                node->pai->cor = Black;
-                sibling->dir->cor = Black;
+                node->pai->cor = Preto;
+                sibling->dir->cor = Preto;
                 rotacaoEsquerda(tree, node->pai);
                 node = tree->root;
             }
@@ -273,36 +273,36 @@ void rb_delete_fixup(red_black_tree *tree, tree_node *node)
         else /* mesma coisa só que para o caso de ser o filho direito de um pai */
         {
             tree_node *sibling = node->pai->esq;
-            if (sibling->cor == Red)
+            if (sibling->cor == Vermelho)
             {
-                sibling->cor = Black;
-                node->pai->cor = Red;
+                sibling->cor = Preto;
+                node->pai->cor = Vermelho;
                 rotacaoDireita(tree, node->pai);
                 sibling = node->pai->esq;
             }
-            if (sibling->dir->cor == Black && sibling->esq->cor == Black)
+            if (sibling->dir->cor == Preto && sibling->esq->cor == Preto)
             {
-                sibling->cor = Red;
+                sibling->cor = Vermelho;
                 node = node->pai;
             }
             else
             {
-                if (sibling->esq->cor == Black)
+                if (sibling->esq->cor == Preto)
                 {
-                    sibling->dir->cor = Black;
-                    sibling->cor = Red;
+                    sibling->dir->cor = Preto;
+                    sibling->cor = Vermelho;
                     rotacaoEsquerda(tree, sibling);
                     sibling = node->pai->esq;
                 }
                 sibling->cor = node->pai->cor;
-                node->pai->cor = Black;
-                sibling->esq->cor = Black;
+                node->pai->cor = Preto;
+                sibling->esq->cor = Preto;
                 rotacaoDireita(tree, node->pai);
                 node = tree->root;
             }
         }
     }
-    node->cor = Black;
+    node->cor = Preto;
 }
 
 void rb_delete(red_black_tree *tree, tree_node *node)
@@ -345,7 +345,7 @@ void rb_delete(red_black_tree *tree, tree_node *node)
         successor->cor = node->cor;
     }
     /* se o no sucessor  */
-    if (successor_orignal_cor == Black)
+    if (successor_orignal_cor == Preto)
         rb_delete_fixup(tree, children);
 }
 
