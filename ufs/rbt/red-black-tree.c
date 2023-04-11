@@ -246,6 +246,7 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
             No *irmao = no->pai->dir;
             if (irmao->cor == Vermelho) // (Caso 1) Irmão é vermelho
             {
+                printf("-> Foi removido com o Caso 1.\n\n");
                 no->pai->cor = Vermelho; // Pai fica vermelho.
                 irmao->cor = Preto; // Irmão fica preto.
 
@@ -256,13 +257,17 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
             // (Caso 2) O irmão e seus filhos são pretos.
             if (filhosPretos(irmao))
             {
+                printf("-> Foi removido com o Caso 2.\n\n");
                 irmao->cor = Vermelho; // Irmão fica vermelho.
                 no = no->pai; // Atualiza o nó.
             }
             else // (Caso 3) Filho esquerdo é vermelho e direito é preto.
             { 
+                printf("-> Foi removido com o Caso ");
+                bool ehCasoTresQuatro = false;
                 if (irmao->dir->cor == Preto)
                 {
+                    ehCasoTresQuatro = true;
                     irmao->esq->cor = Preto; // Filho esquerdo do irmão fica preto.
                     irmao->cor = Vermelho; // Irmão fica vermelho.
 
@@ -271,6 +276,7 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
                     irmao = no->pai->dir; // Atualiza o irmão.
                 }
                 // (Caso 4) Filho direito é vermelho.
+                printf(!ehCasoTresQuatro ? "4.\n\n": "3 e 4.\n\n");
                 irmao->cor = no->pai->cor;
                 no->pai->cor = Preto;
                 irmao->dir->cor = Preto;
@@ -284,6 +290,7 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
             No *irmao = no->pai->esq;
             if (irmao->cor == Vermelho) // (Caso 1) Irmão é vermelho
             {
+                printf("-> Foi removido com o Caso 1.\n\n");
                 no->pai->cor = Vermelho; // Pai fica vermelho.
                 irmao->cor = Preto; // Irmão fica preto.
 
@@ -293,13 +300,17 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
             // (Caso 2) O irmão e seus filhos são pretos.
             if (filhosPretos(irmao))
             {
+                printf("-> Foi removido com o Caso 2.\n\n");
                 irmao->cor = Vermelho; // Irmão fica vermelho.
                 no = no->pai; // Atualiza o nó.
             }
             else // (Caso 3) Filho esquerdo é vermelho e direito é preto.
             {   
+                printf("-> Foi removido com o Caso ");
+                bool ehCasoTresQuatro = false;
                 if (irmao->esq->cor == Preto)
                 {
+                    ehCasoTresQuatro = true;
                     irmao->dir->cor = Preto; // / Filho direito do irmão fica preto.
                     irmao->cor = Vermelho; // Irmão fica vermelho.
 
@@ -308,6 +319,7 @@ void balancearRemocao(ARVORE_RUBRO_NEGRA *arv, No *no)
                     irmao = no->pai->esq; // Atualiza o irmão.
                 }
                 // (Caso 4) Filho direito é vermelho.
+                printf(!ehCasoTresQuatro ? "4.\n\n": "3 e 4.\n\n");
                 irmao->cor = no->pai->cor;
                 no->pai->cor = Preto;
                 irmao->esq->cor = Preto;
@@ -354,6 +366,8 @@ void remover(ARVORE_RUBRO_NEGRA *arv, No *no)
         sucessor->cor = no->cor;
     }
     // Se o sucessor for preto, balanceamos.
+    printf("Valor %d removido!\n", no->valor);
+    free(no);
     if (cor_original_sucessor == Preto)
         balancearRemocao(arv, filho);
 }
@@ -363,7 +377,7 @@ void inorder(ARVORE_RUBRO_NEGRA *arv, No *no)
     if (no != arv->NIL)
     {
         inorder(arv, no->esq);
-        printf(arv->raiz == no ? "Raiz: " : "");
+        printf(arv->raiz == no ? "\nRaiz: " : "\n");
         printf("%d ", no->valor);
         printf(no->cor == Vermelho ? "Vermelho\n" : "Preto\n");
         inorder(arv, no->dir);
