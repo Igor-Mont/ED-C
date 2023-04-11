@@ -114,6 +114,7 @@ void rotacaoDireita(ARVORE_RUBRO_NEGRA *arv, No *no)
 }
 
 void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
+    bool foiBalanceado = false;
     while (no->pai->cor == Vermelho) {   
         No * pai = no->pai;
         No * avo = no->pai->pai;
@@ -122,17 +123,23 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
             No *tio = avo->dir;
             if (tio->cor == Vermelho) // (Caso 1) Tio também é vermelho.
             {
+                printf("-> Foi balanceado com o Caso 1.\n\n");
                 pai->cor = Preto;
                 tio->cor = Preto;
                 avo->cor = Vermelho;
                 no = avo;
             }
             else { // (Caso 2) Tio é preto.
+                bool ehRotacaoDupla = false;
+                printf("-> Foi balanceado com o Caso 2");
                 if (!ehFilhoEsquerdo(no)) // (Rotação dupla) Nó é filho direito do pai.
                 { 
+                    ehRotacaoDupla = true;
+                    printf(" (Rotacao dupla - Esq -> Dir)");
                     no = pai;
                     rotacaoEsquerda(arv, no);
                 }
+                printf(!ehRotacaoDupla ? " (Rotacao Simples).\n\n" : ".\n\n");
                 pai = no->pai;
                 // (Rotação Simples) Nó é filho esquerdo do pai.
                 pai->cor = Preto;       
@@ -145,6 +152,7 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
             No *tio = avo->esq;
             if (tio->cor == Vermelho) // (Caso 1) Tio também é vermelho.
             {
+                printf("-> Foi balanceado com o Caso 1.\n\n");
                 pai->cor = Preto;
                 tio->cor = Preto;
                 avo->cor = Vermelho;
@@ -152,11 +160,16 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
             }
             else // (Caso 2) Tio é preto.
             {
+                bool ehRotacaoDupla = false;
+                printf("-> Foi balanceado com o Caso 2");
                 if (ehFilhoEsquerdo(no)) // (Rotação dupla) Nó é filho esquerdo do pai.
                 {   
-                    no = pai; // marked no.pai as new no
+                    ehRotacaoDupla = true;
+                    printf(" (Rotacao dupla - Dir -> Esq)");
+                    no = pai;
                     rotacaoDireita(arv, no);
                 }
+                printf(!ehRotacaoDupla ? " (Rotacao Simples).\n\n" : ".\n\n");
                 pai = no->pai;
                 // (Rotação Simples) Nó é filho direito do pai.
                 pai->cor = Preto;
@@ -164,8 +177,10 @@ void balancearInsercao(ARVORE_RUBRO_NEGRA *arv, No *no) {
                 rotacaoEsquerda(arv, avo);
             }
         }
+        foiBalanceado = true;
     }
     arv->raiz->cor = Preto;
+    printf(!foiBalanceado ? "-> Sem balanceamento.\n\n": "");
 }
 
 void inserir(ARVORE_RUBRO_NEGRA *arv, No *NoNovo) 
@@ -194,6 +209,8 @@ void inserir(ARVORE_RUBRO_NEGRA *arv, No *NoNovo)
 
     NoNovo->dir = arv->NIL;
     NoNovo->esq = arv->NIL;
+
+    printf("Valor %d inserido!\n", NoNovo->valor);
 
     balancearInsercao(arv, NoNovo);
 }
